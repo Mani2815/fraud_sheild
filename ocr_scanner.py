@@ -8,6 +8,7 @@ from PIL import Image, ImageEnhance, ImageFilter
 import io
 import re
 
+pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
 
 def preprocess_image(image_bytes):
     """Enhance image for better OCR accuracy."""
