@@ -266,7 +266,7 @@
 
     // Bar chart — top flags
     const flagLabels = [{% for f, count in top_flags %}"{{ f }}"{% if not loop.last %}, {% endif %} {% endfor %}];
-    const flagCounts = [{% for f, count in top_flags %}{ { count } } {% if not loop.last %}, {% endif %} {% endfor %}];
+    const flagCounts = [{% for f, count in top_flags %}{{ count }} {% if not loop.last %}, {% endif %} {% endfor %}];
 
     let flagChart = new Chart(document.getElementById('flagChart'), {
       type: 'bar',
