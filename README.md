@@ -1,4 +1,4 @@
-# 🛡 FraudShield v3.0 - Threat Intelligence System
+# 🛡 FraudShield - Threat Intelligence System
 
 A production-grade web application for analyzing suspicious SMS, emails, URLs, and screenshots using a multi-layered forensic detection system. 
 
