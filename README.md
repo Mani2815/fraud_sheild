@@ -1,126 +1,132 @@
-# 🛡 FraudShield — Digital Fraud Awareness & Detection Platform
+# 🛡 FraudShield v3.0 — Threat Intelligence System
 
-A production-grade web application for analyzing suspicious SMS and WhatsApp messages using a dual-engine forensic detection system. Features a custom **forensic terminal aesthetic** UI with Bebas Neue typography, amber accent palette, scan-line overlays, and animated result panels.
+A production-grade web application for analyzing suspicious SMS, emails, URLs, and screenshots using a multi-layered forensic detection system. 
+
+Features a custom **forensic terminal aesthetic** UI with advanced typography, amber accent palette, interactive charts, and real-time Light/Dark mode themes.
 
 ---
 
-## Features
+## 🚀 Key Features (v3.0)
 
 | Feature | Details |
 |---------|---------|
-| **Rule-Based Engine** | 35+ regex patterns covering OTP, KYC, PAN, Aadhaar, lottery, phishing links |
-| **AI/NLP Classifier** | TF-IDF Vectorizer + Logistic Regression on 46 labeled messages |
-| **Weighted Final Score** | `0.6 × Rule Score + 0.4 × AI Score` |
-| **Risk Tiers** | LOW (0–30) · MEDIUM (31–70) · HIGH (71–100) |
-| **Phrase Highlighting** | Suspicious tokens marked in amber in the original message |
-| **Forensic Report** | Plain-language analyst explanation |
-| **Terminal UI** | Bebas Neue + IBM Plex Mono, scan-line texture, animated panels |
+| **Multi-Layered Engine** | Combines Static Rule matching + AI/NLP Classification + Deep URL Inspection |
+| **Image OCR Scanner** | Upload screenshots; Tesseract OCR automatically extracts and scans the text |
+| **Multilingual Support** | Detects fraud indicators and keywords across regional languages |
+| **Live Threat Dashboard** | Real-time analytics, Risk Distribution donuts, and Top Fraud Signals charts |
+| **Community Scam Feed** | Interactive, paginated feed of recently intercepted threat logs |
+| **Explainable AI** | Plain-language forensic breakdown showing exactly *why* a message was flagged |
+| **Forensic PDF Reports** | Generate & download timestamped PDF threat reports with one click |
+| **Responsive Dark & Light Mode** | Fully custom-themed UI that persists seamlessly via `localStorage` |
 
 ---
 
-## Architecture
+## 🏗 System Architecture
 
-```
-fraudshield/
-├── app.py              Flask server · routing · result aggregation
-├── rule_engine.py      Regex/keyword pattern matcher · phrase highlighter
-├── nlp_model.py        TF-IDF + Logistic Regression · trained on boot
-├── requirements.txt    Flask · scikit-learn · numpy · gunicorn
+```text
+fraudshield 3/
+├── app.py              Flask server · Routing · Final result aggregation
+├── rule_engine.py      Regex/keyword pattern matcher · Phrase highlighter
+├── nlp_model.py        TF-IDF + Logistic Regression · AI classification
+├── ocr_scanner.py      Pillow + pytesseract image processing pipeline
+├── url_inspector.py    Deep inspection for suspicious link domains
+├── multilingual.py     Regional language fraud pattern detection
+├── explainability.py   XAI module for generating plain-language reports
+├── pdf_report.py       ReportLab generator for forensic PDF downloads
+├── community_feed.py   Aggregates feed data from the SQLite logs
+├── database.py         SQLite3 connection · Stat tracking & storage
+├── requirements.txt    Python dependencies
 ├── static/
-│   └── style.css       Forensic terminal UI · Bebas Neue · amber palette
-├── templates/
-│   └── index.html      Jinja2 template · 5-panel result layout
-└── README.md
+│   ├── style.css       Forensic UI · CSS variables · Light/Dark Mode logic
+│   └── theme.js        Client-side theme switcher logic
+└── templates/          Jinja2 HTML (index, dashboard, community, logs)
 ```
 
-**Detection pipeline:**
-```
-User Input
-  ├─► rule_engine.py  → rule_score + detected_phrases
-  └─► nlp_model.py    → ai_score (TF-IDF probability)
+**Detection Pipeline:**
+```text
+Text / Image Input
+  ├─► ocr_scanner.py (if image)
+  ├─► rule_engine.py      → rule_score + detected_phrases
+  ├─► nlp_model.py        → ai_score (TF-IDF probability)
+  ├─► multilingual.py     → regional bonus score + flags
+  └─► url_inspector.py    → url risk multiplier
            ↓
-  final_score = 0.6 × rule_score + 0.4 × ai_score
+  final_score = weighted aggregation (0.6 × rules + 0.4 × AI) + multipliers
            ↓
-  Risk Level: LOW / MEDIUM / HIGH
+  Explainable AI formats the forensic breakdown
            ↓
-  Results → index.html (5 panels)
+  Results rendered via index.html & Persisted to database.py
 ```
 
 ---
 
-## Setup
+## 🛠 Setup & Installation
 
 ### Prerequisites
 - Python 3.8+
-- pip
+- `pip` package manager
+- **Tesseract OCR Engine** (Required for the screenshot scanning feature)
+  - **macOS:** `brew install tesseract`
+  - **Linux (Debian/Ubuntu):** `sudo apt-get install tesseract-ocr`
+  - **Windows:** Download from official GitHub releases.
 
-### Steps
+### Installation Steps
 
 ```bash
-# 1. Clone / extract the project
-cd fraudshield
+# 1. Clone or extract the project directory
+cd "fraudshield 3"
 
-# 2. Create virtual environment
-python -m venv venv
+# 2. (Optional) Create a virtual environment
+python3 -m venv venv
 source venv/bin/activate       # macOS / Linux
 venv\Scripts\activate          # Windows
 
-# 3. Install dependencies
+# 3. Install required Python packages
 pip install -r requirements.txt
 ```
 
 ---
 
-## Run Locally
+## ⚡ Run Locally
+
+Start the application:
 
 ```bash
-python app.py
+python3 app.py
 ```
 
-Visit **http://127.0.0.1:5000** in your browser.
+Visit **http://127.0.0.1:5000** in your web browser.
 
 ---
 
-## Deploy to Render
+## 📊 Result Scoring Reference
 
-1. Push project to a GitHub repository.
-2. Log in to [render.com](https://render.com) → **New Web Service**.
-3. Connect your GitHub repo.
-4. Configure:
-   - **Environment:** Python 3
-   - **Build Command:** `pip install -r requirements.txt`
-   - **Start Command:** `gunicorn app:app`
-5. Click **Deploy**.
+The final risk score dictates how the system dynamically responds, colors its UI badges, and crafts the XAI explanation.
 
----
-
-## Scoring Reference
-
-```
-final_score = (0.6 × rule_score) + (0.4 × ai_score)
-
-0  – 30  → 🟢 LOW    — Appears safe
-31 – 70  → 🟡 MEDIUM — Exercise caution
-71 – 100 → 🔴 HIGH   — Likely fraudulent
+```text
+0  – 30  → 🟢 LOW RISK    — Appears safe, no major flags detected
+31 – 70  → 🟡 MEDIUM RISK — Exercise caution, suspicious patterns found
+71 – 100 → 🔴 HIGH RISK   — Likely fraudulent / Phishing attempt
 ```
 
 ---
 
-## Design System
+## 🎨 Design System
+
+FraudShield utilizes a custom-built, classless-style CSS aesthetic focusing on monospace readability and threat intelligence vibes.
 
 | Token | Value |
 |-------|-------|
-| Display font | Bebas Neue |
-| Body font | Barlow |
-| Mono font | IBM Plex Mono |
-| Base background | `#0a0a08` |
-| Accent | `#f5a623` (amber) |
-| HIGH | `#ff3d5a` |
-| MEDIUM | `#ff8c00` |
-| LOW | `#00c896` |
+| UI Display Font | `Bebas Neue` |
+| Data/Code Font | `IBM Plex Mono` |
+| Body Font | `Barlow` (sans-serif fallback) |
+| Accent Color | `#f5a623` (Amber) |
+| Danger (HIGH) | `#ff3d5a` (Crimson Red) |
+| Warning (MED) | `#ff8c00` (Dark Orange) |
+| Safe (LOW) | `#00c896` (Mint Green) |
 
 ---
 
-## Disclaimer
+## ⚠️ Disclaimer
 
-This tool is for **educational and awareness purposes only**. Not a substitute for professional cybersecurity tools or advice.
+This tool is designed for educational, research, and awareness purposes only. It is not a substitute for professional enterprise cybersecurity tools or legal advice.
