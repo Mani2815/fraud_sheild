@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FraudShield — Live Dashboard</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500&family=Barlow:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script>
+    (function () {
+      var t = localStorage.getItem('fraudshield-theme');
+      if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    })();
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+</head>
+
+<body>
+  <div class="scanline"></div>
+  <div class="noise"></div>
+  <header>
+    <div class="header-left">
+      <div class="logo">
+        <svg class="logo-svg" viewBox="0 0 40 40" fill="none">
+          <polygon points="20,2 38,12 38,28 20,38 2,28 2,12" stroke="#f5a623" stroke-width="1.5" fill="none" />
+          <polygon points="20,8 32,15 32,25 20,32 8,25 8,15" stroke="#f5a623" stroke-width="1"
+            fill="rgba(245,166,35,0.08)" />
+          <circle cx="20" cy="20" r="4" fill="#f5a623" />
+        </svg>
+        <div class="logo-text"><span class="logo-name">FRAUDSHIELD</span><span class="logo-sub">THREAT INTELLIGENCE
+            SYSTEM v3.0</span></div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="status-item"><span class="status-dot pulse"></span><span class="status-label">LIVE</span></div>
+      <nav class="header-nav">
+        <a href="/" class="nav-link mono">ANALYZE</a>
+        <a href="/dashboard" class="nav-link mono active">DASHBOARD</a>
+        <a href="/community" class="nav-link mono">COMMUNITY</a>
+        <a href="#awareness" class="nav-link mono">AWARENESS</a>
+        <a href="/logs" class="nav-link mono">LOGS</a>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+          <svg class="theme-icon sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+          <svg class="theme-icon moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="ticker-wrap">
+    <div class="ticker-track">
+      <span>LIVE THREAT DASHBOARD</span><span class="sep">///</span>
+      <span>TOTAL SCANS: {{ stats.total }}</span><span class="sep">///</span>
+      <span>HIGH RISK: {{ stats.high }}</span><span class="sep">///</span>
+      <span>AVG SCORE: {{ stats.avg_score }}</span><span class="sep">///</span>
+      <span>LIVE THREAT DASHBOARD</span><span class="sep">///</span>
+      <span>TOTAL SCANS: {{ stats.total }}</span><span class="sep">///</span>
+      <span>HIGH RISK: {{ stats.high }}</span><span class="sep">///</span>
+      <span>AVG SCORE: {{ stats.avg_score }}</span><span class="sep">///</span>
+    </div>
+  </div>
+
+  <main>
+    <div class="logs-hero">
+      <div class="hero-label mono">// REAL-TIME THREAT INTELLIGENCE</div>
+      <h1 class="hero-title" style="font-size:clamp(3rem,7vw,5.5rem);">LIVE <span class="outline-text">DASHBOARD</span>
+      </h1>
+    </div>
+
+    <!-- BIG STAT CARDS -->
+    <div class="dash-stats">
+      <div class="dash-stat-card">
+        <div class="dash-stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f5a623"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="12" width="4" height="9" rx="1" fill="rgba(245,166,35,0.2)" />
+            <rect x="10" y="7" width="4" height="14" rx="1" fill="rgba(245,166,35,0.3)" />
+            <rect x="17" y="3" width="4" height="18" rx="1" fill="rgba(245,166,35,0.4)" />
+          </svg></div>
+        <div class="dash-stat-num">{{ stats.total }}</div>
+        <div class="dash-stat-label mono">TOTAL SCANS</div>
+      </div>
+      <div class="dash-stat-card high-card">
+        <div class="dash-stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ff3d5a"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
+              fill="rgba(255,61,90,0.15)" />
+            <line x1="12" y1="9" x2="12" y2="13" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg></div>
+        <div class="dash-stat-num" style="color:var(--high)">{{ stats.high }}</div>
+        <div class="dash-stat-label mono">HIGH RISK</div>
+        <div class="dash-stat-pct mono">{% if stats.total %}{{ ((stats.high / stats.total)*100)|round(1) }}%{% else
+          %}0%{% endif %}</div>
+      </div>
+      <div class="dash-stat-card medium-card">
+        <div class="dash-stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ff8c00"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" fill="rgba(255,140,0,0.15)" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg></div>
+        <div class="dash-stat-num" style="color:var(--medium)">{{ stats.medium }}</div>
+        <div class="dash-stat-label mono">MEDIUM RISK</div>
+        <div class="dash-stat-pct mono">{% if stats.total %}{{ ((stats.medium / stats.total)*100)|round(1) }}%{% else
+          %}0%{% endif %}</div>
+      </div>
+      <div class="dash-stat-card low-card">
+        <div class="dash-stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00c896"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 11-5.93-9.14" fill="rgba(0,200,150,0.15)" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+          </svg></div>
+        <div class="dash-stat-num" style="color:var(--low)">{{ stats.low }}</div>
+        <div class="dash-stat-label mono">LOW RISK</div>
+        <div class="dash-stat-pct mono">{% if stats.total %}{{ ((stats.low / stats.total)*100)|round(1) }}%{% else
+          %}0%{% endif %}</div>
+      </div>
+      <div class="dash-stat-card">
+        <div class="dash-stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f5a623"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="rgba(245,166,35,0.2)" />
+          </svg></div>
+        <div class="dash-stat-num" style="color:var(--amber)">{{ stats.avg_score }}</div>
+        <div class="dash-stat-label mono">AVG THREAT SCORE</div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW -->
+    <div class="charts-row">
+      <div class="panel chart-panel">
+        <div class="panel-header">
+          <span class="panel-id mono">[ CHART-01 ]</span>
+          <span class="panel-title">RISK DISTRIBUTION</span>
+        </div>
+        <div class="chart-wrap" style="padding:24px">
+          <canvas id="riskChart" height="220"></canvas>
+        </div>
+      </div>
+      <div class="panel chart-panel">
+        <div class="panel-header">
+          <span class="panel-id mono">[ CHART-02 ]</span>
+          <span class="panel-title">TOP FRAUD SIGNALS</span>
+        </div>
+        <div class="chart-wrap" style="padding:24px">
+          <canvas id="flagChart" height="220"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP FLAGS TABLE -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-id mono">[ PANEL-DB ]</span>
+        <span class="panel-title">MOST COMMON FRAUD SIGNALS</span>
+      </div>
+      <div style="padding:20px 24px">
+        {% if top_flags %}
+        {% for flag, count in top_flags %}
+        <div class="flag-bar-row">
+          <span class="flag-bar-label mono">{{ flag }}</span>
+          <div class="flag-bar-track">
+            <div class="flag-bar-fill" style="width:{{ ((count / top_flags[0][1]) * 100)|int }}%"></div>
+          </div>
+          <span class="flag-bar-count mono accent">{{ count }}</span>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p style="color:var(--text-muted);font-size:0.88rem">No data yet — run some scans first.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- RECENT ACTIVITY -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-id mono">[ PANEL-LIVE ]</span>
+        <span class="panel-title">RECENT ACTIVITY FEED</span>
+      </div>
+      <div class="activity-feed">
+        {% for r in recent[:15] %}
+        <div class="activity-item">
+          <span class="risk-pill {{ r.risk_level }}">{{ r.risk_level }}</span>
+          <span class="act-score mono"
+            style="color:{% if r.risk_level=='HIGH' %}var(--high){% elif r.risk_level=='MEDIUM' %}var(--medium){% else %}var(--low){% endif %}">{{
+            r.final_score }}</span>
+          <span class="act-msg">{{ r.message[:70] }}{% if r.message|length > 70 %}…{% endif %}</span>
+          <span class="act-time mono muted">{{ r.analyzed_at[-8:] }}</span>
+        </div>
+        {% endfor %}
+        {% if not recent %}
+        <div style="padding:32px 24px;color:var(--text-muted);font-size:0.88rem">No recent activity. <a href="/"
+            class="amber-link">Run a scan →</a></div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="action-row" style="margin-top:24px">
+      <a href="/" class="reset-btn mono">↩ BACK TO ANALYZER</a>
+      <a href="/community" class="reset-btn mono">→ COMMUNITY FEED</a>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-inner"><span class="mono">FRAUDSHIELD v3.0</span><span class="footer-sep">///</span><span
+        class="mono">LIVE THREAT DASHBOARD</span><span class="footer-sep">///</span><span class="mono">© 2025</span>
+    </div>
+  </footer>
+
+  <script>
+    const style = getComputedStyle(document.body);
+    const getVar = (name) => style.getPropertyValue(name).trim() || '#000';
+
+    // Create variables holding the calculated colors
+    const applyChartTheme = () => {
+      Chart.defaults.color = getVar('--text-muted');
+      Chart.defaults.font.family = 'IBM Plex Mono';
+
+      const amber = getVar('--amber');
+      const high = getVar('--high');
+      const medium = getVar('--medium');
+      const low = getVar('--low');
+      const surface = getVar('--surface');
+      const border = getVar('--border');
+
+      return { amber, high, medium, low, surface, border };
+    };
+
+    const c = applyChartTheme();
+
+    // Donut chart
+    let riskChart = new Chart(document.getElementById('riskChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['HIGH', 'MEDIUM', 'LOW'],
+        datasets: [{
+          data: [{{ stats.high }}, {{ stats.medium }}, {{ stats.low }}],
+    backgroundColor: [c.high, c.medium, c.low],
+      borderColor: c.surface,
+        borderWidth: 3,
+          hoverOffset: 8
+        }]
+      },
+    options: {
+      responsive: true,
+        cutout: '65%',
+          plugins: {
+        legend: { position: 'bottom', labels: { padding: 20, font: { size: 11 } } }
+      }
+    }
+    });
+
+    // Bar chart — top flags
+    const flagLabels = [{% for f, count in top_flags %}"{{ f }}"{% if not loop.last %}, {% endif %} {% endfor %}];
+    const flagCounts = [{% for f, count in top_flags %}{ { count } } {% if not loop.last %}, {% endif %} {% endfor %}];
+
+    let flagChart = new Chart(document.getElementById('flagChart'), {
+      type: 'bar',
+      data: {
+        labels: flagLabels,
+        datasets: [{
+          label: 'Detections',
+          data: flagCounts,
+          backgroundColor: c.amber,
+          borderColor: c.amber,
+          borderWidth: 1,
+          borderRadius: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { color: c.border }, ticks: { font: { size: 10 } } },
+          y: { grid: { display: false }, ticks: { font: { size: 10 } } }
+        }
+      }
+    });
+
+    // Handle theme toggle re-rendering
+    const origToggle = window.toggleTheme;
+    window.toggleTheme = function () {
+      if (origToggle) origToggle();
+
+      // Update charts
+      setTimeout(() => {
+        const nc = applyChartTheme();
+        riskChart.data.datasets[0].backgroundColor = [nc.high, nc.medium, nc.low];
+        riskChart.data.datasets[0].borderColor = nc.surface;
+        riskChart.update();
+
+        flagChart.data.datasets[0].backgroundColor = nc.amber;
+        flagChart.data.datasets[0].borderColor = nc.amber;
+        flagChart.options.scales.x.grid.color = nc.border;
+        flagChart.update();
+      }, 50);
+    };
+
+    // Auto-refresh stats every 15s
+    setInterval(() => {
+      fetch('/api/stats').then(r => r.json()).then(d => {
+        // Could update DOM stats here in a real deployment
+      });
+    }, 15000);
+  </script>
+  <script src="{{ url_for('static', filename='theme.js') }}"></script>
+</body>
+
+</html>

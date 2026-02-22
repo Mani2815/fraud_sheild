@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FraudShield — Threat Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500&family=Barlow:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script>
+    // Apply saved theme immediately to prevent flash
+    (function () {
+      var t = localStorage.getItem('fraudshield-theme');
+      if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    })();
+  </script>
+</head>
+
+<body>
+  <div class="scanline"></div>
+  <div class="noise"></div>
+
+  <header>
+    <div class="header-left">
+      <div class="logo">
+        <svg class="logo-svg" viewBox="0 0 40 40" fill="none">
+          <polygon points="20,2 38,12 38,28 20,38 2,28 2,12" stroke="#f5a623" stroke-width="1.5" fill="none" />
+          <polygon points="20,8 32,15 32,25 20,32 8,25 8,15" stroke="#f5a623" stroke-width="1"
+            fill="rgba(245,166,35,0.08)" />
+          <circle cx="20" cy="20" r="4" fill="#f5a623" />
+        </svg>
+        <div class="logo-text">
+          <span class="logo-name">FRAUDSHIELD</span>
+          <span class="logo-sub">THREAT INTELLIGENCE SYSTEM v3.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="status-item">
+        <span class="status-dot pulse"></span>
+        <span class="status-label">SYSTEM ONLINE</span>
+      </div>
+      <nav class="header-nav">
+        <a href="/" class="nav-link mono active">ANALYZE</a>
+        <a href="/dashboard" class="nav-link mono">DASHBOARD</a>
+        <a href="/community" class="nav-link mono">COMMUNITY</a>
+        <a href="#awareness" class="nav-link mono">AWARENESS</a>
+        <a href="/logs" class="nav-link mono">LOGS</a>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+          <svg class="theme-icon sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+          <svg class="theme-icon moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="ticker-wrap">
+    <div class="ticker-track">
+      <span>RULE ENGINE: ACTIVE</span><span class="sep">///</span>
+      <span>AI CLASSIFIER: ONLINE</span><span class="sep">///</span>
+      <span>OCR SCANNER: READY</span><span class="sep">///</span>
+      <span>VOICE INPUT: ENABLED</span><span class="sep">///</span>
+      <span>MULTILINGUAL: EN+HI+TA+TE</span><span class="sep">///</span>
+      <span>URL INSPECTOR: ARMED</span><span class="sep">///</span>
+      <span>PDF REPORTS: ACTIVE</span><span class="sep">///</span>
+      <span>EXPLAINABLE AI: ON</span><span class="sep">///</span>
+      <span>COMMUNITY FEED: LIVE</span><span class="sep">///</span>
+      <span>RULE ENGINE: ACTIVE</span><span class="sep">///</span>
+      <span>AI CLASSIFIER: ONLINE</span><span class="sep">///</span>
+      <span>OCR SCANNER: READY</span><span class="sep">///</span>
+      <span>VOICE INPUT: ENABLED</span><span class="sep">///</span>
+      <span>MULTILINGUAL: EN+HI+TA+TE</span><span class="sep">///</span>
+      <span>URL INSPECTOR: ARMED</span><span class="sep">///</span>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero">
+      <div class="hero-label mono">// DIGITAL FRAUD AWARENESS PLATFORM — v3.0</div>
+      <h1 class="hero-title">ANALYZE.<br><span class="outline-text">DETECT.</span><br>PROTECT.</h1>
+      <div class="hero-right">
+        <p class="hero-desc">Paste, speak, or upload a screenshot of any suspicious message. Our 9-engine forensic
+          system assesses the threat in real time — with AI explanation, URL inspection, multilingual support, and PDF
+          reporting.</p>
+        <div class="hero-stats">
+          <div class="stat"><span class="stat-num">9</span><span class="stat-label">Detection Engines</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><span class="stat-num">4</span><span class="stat-label">Languages</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><span class="stat-num">35+</span><span class="stat-label">Fraud Patterns</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INPUT PANEL -->
+    <section class="panel input-panel">
+      <div class="panel-header">
+        <span class="panel-id mono">[ PANEL-01 ]</span>
+        <span class="panel-title">MESSAGE INPUT</span>
+        <span class="panel-status mono">3 INPUT MODES AVAILABLE</span>
+      </div>
+
+      <!-- INPUT MODE TABS -->
+      <div class="input-tabs">
+        <button class="tab-btn active" onclick="switchTab('text', this)"><svg width="14" height="14" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            style="vertical-align:-2px;margin-right:4px">
+            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+          </svg> TYPE / PASTE</button>
+        <button class="tab-btn" onclick="switchTab('voice', this)"><svg width="14" height="14" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            style="vertical-align:-2px;margin-right:4px">
+            <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
+            <path d="M19 10v2a7 7 0 01-14 0v-2" />
+            <line x1="12" y1="19" x2="12" y2="23" />
+            <line x1="8" y1="23" x2="16" y2="23" />
+          </svg> VOICE INPUT</button>
+        <button class="tab-btn" onclick="switchTab('ocr', this)"><svg width="14" height="14" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            style="vertical-align:-2px;margin-right:4px">
+            <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
+            <circle cx="12" cy="13" r="4" />
+          </svg> SCREENSHOT OCR</button>
+      </div>
+
+      <!-- TAB: TEXT -->
+      <div id="tab-text" class="tab-content active">
+        <form method="POST" action="/" id="analysisForm" enctype="multipart/form-data">
+          <div class="textarea-wrap">
+            <div class="textarea-corner tl"></div>
+            <div class="textarea-corner tr"></div>
+            <div class="textarea-corner bl"></div>
+            <div class="textarea-corner br"></div>
+            <textarea name="message" id="messageInput"
+              placeholder="Paste suspicious SMS or WhatsApp message here...&#10;&#10;Supports English, Hindi (हिन्दी), Tamil (தமிழ்), Telugu (తెలుగు)"
+              required>{% if result %}{{ result.message }}{% endif %}</textarea>
+          </div>
+          <div class="form-footer">
+            <div class="char-count mono" id="charCount">0 CHARACTERS</div>
+            <button type="submit" class="submit-btn" id="submitBtn">
+              <span class="btn-text">INITIATE SCAN</span>
+              <span class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg></span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- TAB: VOICE -->
+      <div id="tab-voice" class="tab-content">
+        <div class="voice-panel">
+          <div class="voice-status" id="voiceStatus">MICROPHONE READY</div>
+          <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()">
+            <span class="voice-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
+                <path d="M19 10v2a7 7 0 01-14 0v-2" />
+                <line x1="12" y1="19" x2="12" y2="23" />
+                <line x1="8" y1="23" x2="16" y2="23" />
+              </svg></span>
+            <span id="voiceBtnText">START RECORDING</span>
+          </button>
+          <div class="voice-transcript-wrap">
+            <div class="voice-transcript-label mono">TRANSCRIBED TEXT</div>
+            <div class="voice-transcript" id="voiceTranscript">Speak clearly after pressing the button above...</div>
+          </div>
+          <button class="submit-btn" style="margin:0 24px 24px" onclick="analyzeVoiceText()">
+            <span class="btn-text">ANALYZE TRANSCRIPT</span>
+            <span class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB: OCR -->
+      <div id="tab-ocr" class="tab-content">
+        <form method="POST" action="/" enctype="multipart/form-data" id="ocrForm">
+          <div class="ocr-drop-zone" id="dropZone" onclick="document.getElementById('screenshotInput').click()">
+            <div class="drop-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f5a623"
+                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                <line x1="12" y1="18" x2="12.01" y2="18" />
+              </svg></div>
+            <div class="drop-text">DROP SCREENSHOT HERE</div>
+            <div class="drop-sub mono">or click to browse — PNG, JPG, WEBP supported</div>
+            <div class="drop-preview" id="dropPreview"></div>
+          </div>
+          <input type="file" name="screenshot" id="screenshotInput" accept="image/*" style="display:none"
+            onchange="previewImage(this)">
+          {% if ocr_error %}
+          <div class="ocr-error mono"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              style="vertical-align:-2px;margin-right:4px">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg> OCR ERROR: {{ ocr_error }}</div>
+          {% endif %}
+          <div class="form-footer">
+            <div class="mono" style="font-size:0.65rem;color:var(--text-muted)">Tesseract OCR · EN + HI + TA + TE</div>
+            <button type="submit" class="submit-btn">
+              <span class="btn-text">EXTRACT & SCAN</span>
+              <span class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg></span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    {% if result %}
+    <section class="results-section">
+
+      <!-- VERDICT BANNER -->
+      <div class="verdict-banner verdict-{{ result.risk_level }}">
+        <div class="verdict-left">
+          <div class="verdict-eyebrow mono">THREAT ASSESSMENT COMPLETE</div>
+          <div class="verdict-level">{{ result.risk_level }} RISK</div>
+        </div>
+        <div class="verdict-center">
+          <svg viewBox="0 0 120 70" class="gauge-svg">
+            <defs>
+              <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#00c896" />
+                <stop offset="50%" style="stop-color:#ff8c00" />
+                <stop offset="100%" style="stop-color:#ff3d5a" />
+              </linearGradient>
+            </defs>
+            <path d="M10,60 A50,50 0 0,1 110,60" stroke="#1a1a1a" stroke-width="8" fill="none" />
+            <path d="M10,60 A50,50 0 0,1 110,60" stroke="url(#gaugeGrad)" stroke-width="8" fill="none"
+              stroke-dasharray="157" stroke-dashoffset="{{ ((100 - result.final_score) / 100 * 157)|int }}" />
+            <text x="60" y="55" text-anchor="middle" fill="#f0ede6" font-family="Bebas Neue" font-size="22">{{
+              result.final_score }}</text>
+            <text x="60" y="68" text-anchor="middle" fill="#666" font-family="IBM Plex Mono" font-size="6">THREAT
+              SCORE</text>
+          </svg>
+        </div>
+        <div class="verdict-right">
+          <div class="verdict-icon verdict-icon-{{ result.risk_level }}">
+            {% if result.risk_level == "HIGH" %}<svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>{% elif result.risk_level == "MEDIUM" %}<svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>{% else %}<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>{% endif %}
+          </div>
+          <!-- Feature 7: PDF Download -->
+          <form method="POST" action="/download-report" style="margin-top:12px">
+            <input type="hidden" name="result_data" value='{{ result | tojson | e }}'>
+            <button type="submit" class="pdf-btn mono"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                style="vertical-align:-2px;margin-right:4px">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg> DOWNLOAD PDF REPORT</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- SCORES + SIGNALS -->
+      <div class="panels-row">
+        <div class="panel score-panel">
+          <div class="panel-header">
+            <span class="panel-id mono">[ PANEL-02 ]</span>
+            <span class="panel-title">SCORE BREAKDOWN</span>
+          </div>
+          <div class="scores-list">
+            <div class="score-row">
+              <div class="score-meta"><span class="score-name mono">RULE ENGINE</span><span class="score-desc">Keyword +
+                  Pattern + Multilingual</span></div>
+              <div class="score-visual">
+                <div class="score-bar-track">
+                  <div class="score-bar-fill rule" style="width:{{ result.rule_score }}%"></div>
+                </div>
+                <span class="score-num mono">{{ result.rule_score }}<span class="score-denom">/100</span></span>
+              </div>
+            </div>
+            <div class="score-row">
+              <div class="score-meta"><span class="score-name mono">AI CLASSIFIER</span><span class="score-desc">TF-IDF
+                  + Logistic Regression</span></div>
+              <div class="score-visual">
+                <div class="score-bar-track">
+                  <div class="score-bar-fill ai" style="width:{{ result.ai_score }}%"></div>
+                </div>
+                <span class="score-num mono">{{ result.ai_score }}<span class="score-denom">/100</span></span>
+              </div>
+            </div>
+            <div class="score-row final-row">
+              <div class="score-meta"><span class="score-name mono">FINAL SCORE</span><span class="score-desc">0.6 ×
+                  Rule + 0.4 × AI</span></div>
+              <div class="score-visual">
+                <div class="score-bar-track">
+                  <div class="score-bar-fill final {{ result.risk_level }}" style="width:{{ result.final_score }}%">
+                  </div>
+                </div>
+                <span class="score-num mono large">{{ result.final_score }}<span class="score-denom">/100</span></span>
+              </div>
+            </div>
+          </div>
+          <div class="risk-scale">
+            <div class="scale-item low">0–30<br>LOW</div>
+            <div class="scale-track">
+              <div class="scale-marker" style="left:{{ result.final_score }}%"></div>
+            </div>
+            <div class="scale-item high">71–100<br>HIGH</div>
+          </div>
+        </div>
+
+        <div class="panel signals-panel">
+          <div class="panel-header">
+            <span class="panel-id mono">[ PANEL-03 ]</span>
+            <span class="panel-title">SIGNALS DETECTED</span>
+            <span class="panel-status mono">
+              {% set total_flags = result.detected_phrases|length + result.multilingual_flags|length %}
+              {% if total_flags %}<span class="accent">{{ total_flags }} FLAGS</span>{% else %}<span class="safe">0
+                FLAGS</span>{% endif %}
+            </span>
+          </div>
+          <div class="signals-grid">
+            {% if result.detected_phrases %}
+            {% for phrase in result.detected_phrases %}
+            <div class="signal-chip" style="animation-delay:{{ loop.index0 * 0.05 }}s">
+              <span class="signal-bullet">▸</span><span class="signal-text">{{ phrase }}</span>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% if result.multilingual_flags %}
+            <div class="signal-section-label mono"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                style="vertical-align:-2px;margin-right:4px">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+              </svg> MULTILINGUAL SIGNALS</div>
+            {% for flag in result.multilingual_flags %}
+            <div class="signal-chip multi-chip" style="animation-delay:{{ loop.index0 * 0.05 }}s">
+              <span class="signal-bullet">▸</span><span class="signal-text">{{ flag }}</span>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% if not result.detected_phrases and not result.multilingual_flags %}
+            <div class="no-signals"><span class="safe-icon">◎</span><span>No suspicious keywords detected</span></div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- ANALYST REPORT -->
+      <div class="panel analysis-panel">
+        <div class="panel-header">
+          <span class="panel-id mono">[ PANEL-04 ]</span>
+          <span class="panel-title">ANALYST REPORT</span>
+        </div>
+        <div class="analysis-body">
+          <div class="analysis-prefix mono">SYS &gt;&gt;</div>
+          <p class="analysis-text">{{ result.explanation }}</p>
+        </div>
+      </div>
+
+      <!-- Feature 5: URL DEEP INSPECTOR -->
+      {% if result.url_analysis %}
+      <div class="panel url-panel">
+        <div class="panel-header">
+          <span class="panel-id mono">[ PANEL-05 ]</span>
+          <span class="panel-title">URL DEEP INSPECTOR</span>
+          <span class="panel-status mono accent">{{ result.url_analysis|length }} URL(S) FOUND</span>
+        </div>
+        <div class="url-list">
+          {% for u in result.url_analysis %}
+          <div class="url-item url-{{ u.risk_level }}">
+            <div class="url-header-row">
+              <span class="url-domain mono">{{ u.domain }}</span>
+              <span class="url-score-badge {{ u.risk_level }}">{{ u.risk_level }} · {{ u.risk_score }}/100</span>
+            </div>
+            <div class="url-full mono">{{ u.url[:80] }}{% if u.url|length > 80 %}…{% endif %}</div>
+            <div class="url-findings">
+              {% for finding in u.findings %}
+              <div class="url-finding"><span class="finding-dot {{ u.risk_level }}">●</span> {{ finding }}</div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Feature 8: EXPLAINABLE AI -->
+      {% if result.ai_explanation and result.ai_explanation.features %}
+      <div class="panel xai-panel">
+        <div class="panel-header">
+          <span class="panel-id mono">[ PANEL-06 ]</span>
+          <span class="panel-title">EXPLAINABLE AI — WHY THIS SCORE?</span>
+        </div>
+        <div class="xai-body">
+          <div class="xai-summary">
+            <span class="analysis-prefix mono">AI &gt;&gt;</span>
+            <p class="analysis-text">{{ result.ai_explanation.summary }}</p>
+          </div>
+          <div class="xai-features">
+            {% for f in result.ai_explanation.features[:8] %}
+            <div class="xai-feature-row">
+              <span class="xai-word mono {{ f.direction }}">{{ f.word }}</span>
+              <div class="xai-bar-track">
+                <div class="xai-bar-fill {{ f.direction }}" style="width:{{ f.score }}%"></div>
+              </div>
+              <span class="xai-score mono">{{ f.score }}</span>
+              <span class="xai-dir mono {{ f.direction }}">{{ '▲ FRAUD' if f.direction == 'fraud' else '▼ SAFE'
+                }}</span>
+            </div>
+            {% endfor %}
+          </div>
+          <div class="xai-legend">
+            <span class="legend-item"><span class="legend-dot fraud"></span> Increases fraud probability</span>
+            <span class="legend-item"><span class="legend-dot safe"></span> Decreases fraud probability</span>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- FORENSIC TRANSCRIPT -->
+      <div class="panel highlight-panel">
+        <div class="panel-header">
+          <span class="panel-id mono">[ PANEL-07 ]</span>
+          <span class="panel-title">FORENSIC TRANSCRIPT</span>
+          <span class="panel-status mono">THREATS MARKED IN AMBER</span>
+        </div>
+        <div class="message-display">
+          <div class="message-linenum">
+            {% for i in range(result.message.split('\n')|length) %}
+            <div class="linenum">{{ '%02d'|format(i+1) }}</div>
+            {% endfor %}
+          </div>
+          <div class="message-content">{{ result.highlighted_message | safe }}</div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <a href="/" class="reset-btn mono">↩ ANALYZE NEW MESSAGE</a>
+        <div class="disclaimer mono">FOR EDUCATIONAL & AWARENESS USE ONLY — NOT A SUBSTITUTE FOR PROFESSIONAL SECURITY
+          ADVICE</div>
+      </div>
+    </section>
+    {% endif %}
+  </main>
+
+  <!-- AWARENESS SECTION -->
+  <section class="awareness-section" id="awareness">
+    <div class="awareness-inner">
+      <div class="awareness-header">
+        <div class="awareness-eyebrow mono">// EDUCATIONAL CONTENT</div>
+        <h2 class="awareness-title">KNOW YOUR <span class="outline-text">ENEMY</span></h2>
+        <p class="awareness-sub">Understanding common scam patterns is your first line of defence.</p>
+      </div>
+      <div class="scam-grid">
+        <div class="scam-card">
+          <div class="scam-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f5a623"
+              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+              <line x1="12" y1="18" x2="12.01" y2="18" />
+            </svg></div>
+          <div class="scam-tag mono HIGH">HIGH FREQUENCY</div>
+          <h3 class="scam-name">OTP / KYC Scams</h3>
+          <p class="scam-desc">Fraudsters impersonate banks claiming your account will be blocked unless you share your
+            OTP or update KYC details immediately.</p>
+          <div class="scam-signals"><span class="sig-tag">OTP</span><span class="sig-tag">KYC</span><span
+              class="sig-tag">blocked</span><span class="sig-tag">immediately</span></div>
+          <div class="scam-tip"><span class="tip-label mono"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                style="vertical-align:-1px;margin-right:3px">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg> DEFENCE</span><span>Banks NEVER ask for OTPs over SMS. Call your bank's official number
+              directly.</span></div>
+        </div>
+        <div class="scam-card">
+          <div class="scam-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f5a623"
+              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 010-5H6" />
+              <path d="M18 9h1.5a2.5 2.5 0 000-5H18" />
+              <path d="M4 22h16" />
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22" />
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22" />
+              <path d="M18 2H6v7a6 6 0 0012 0V2z" />
+            </svg></div>
+          <div class="scam-tag mono HIGH">HIGH FREQUENCY</div>
+          <h3 class="scam-name">Lottery & Prize Scams</h3>
+          <p class="scam-desc">You're told you've won a prize. To "claim" it, you must pay a fee or share personal
+            details.</p>
+          <div class="scam-signals"><span class="sig-tag">won</span><span class="sig-tag">prize</span><span
+              class="sig-tag">lottery</span><span class="sig-tag">claim</span></div>
+          <div class="scam-tip"><span class="tip-label mono"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                style="vertical-align:-1px;margin-right:3px">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg> DEFENCE</span><span>You cannot win a lottery you never entered. Fees to claim prizes = always a
+              scam.</span></div>
+        </div>
+        <div class="scam-card">
+          <div class="scam-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f5a623"
+              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
+              <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
+            </svg></div>
+          <div class="scam-tag mono HIGH">GROWING THREAT</div>
+          <h3 class="scam-name">Phishing Links</h3>
+          <p class="scam-desc">URLs that mimic official websites steal your credentials. Our URL Inspector catches these
+            automatically.</p>
+          <div class="scam-signals"><span class="sig-tag">click here</span><span class="sig-tag">http://</span><span
+              class="sig-tag">verify</span></div>
+          <div class="scam-tip"><span class="tip-label mono"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                style="vertical-align:-1px;margin-right:3px">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg> DEFENCE</span><span>Check URLs carefully — official banks use .co.in or .com, never random
+              strings.</span></div>
+        </div>
+        <div class="scam-card">
+          <div class="scam-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f5a623"
+              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+              <line x1="1" y1="10" x2="23" y2="10" />
+            </svg></div>
+          <div class="scam-tag mono MEDIUM">MEDIUM FREQUENCY</div>
+          <h3 class="scam-name">Card / Account Freeze</h3>
+          <p class="scam-desc">Scammers claim your ATM or credit card is frozen and ask for card number, PIN, or CVV to
+            "unfreeze" it.</p>
+          <div class="scam-signals"><span class="sig-tag">ATM</span><span class="sig-tag">PIN</span><span
+              class="sig-tag">unfreeze</span></div>
+          <div class="scam-tip"><span class="tip-label mono"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                style="vertical-align:-1px;margin-right:3px">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg> DEFENCE</span><span>No institution will ever ask for your PIN or CVV. These are secrets only you
+              know.</span></div>
+        </div>
+        <div class="scam-card">
+          <div class="scam-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f5a623"
+              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="5" width="20" height="14" rx="2" />
+              <path d="M8 12h.01" />
+              <path d="M12 12h4" />
+              <path d="M12 16h4" />
+              <circle cx="8" cy="9" r="1.5" />
+            </svg></div>
+          <div class="scam-tag mono HIGH">IDENTITY THEFT</div>
+          <h3 class="scam-name">Aadhaar / PAN Scams</h3>
+          <p class="scam-desc">Messages claim your Aadhaar or PAN is blocked and urge you to share ID numbers to resolve
+            it.</p>
+          <div class="scam-signals"><span class="sig-tag">Aadhaar</span><span class="sig-tag">PAN</span><span
+              class="sig-tag">expired</span></div>
+          <div class="scam-tip"><span class="tip-label mono"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                style="vertical-align:-1px;margin-right:3px">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg> DEFENCE</span><span>UIDAI and IT Department never SMS you asking for ID details. Visit official
+              portals.</span></div>
+        </div>
+        <div class="scam-card">
+          <div class="scam-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f5a623"
+              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+            </svg></div>
+          <div class="scam-tag mono HIGH">REGIONAL THREAT</div>
+          <h3 class="scam-name">Vernacular Language Scams</h3>
+          <p class="scam-desc">Scammers increasingly operate in Hindi, Tamil, and Telugu to target regional users.
+            FraudShield detects these too.</p>
+          <div class="scam-signals"><span class="sig-tag">हिन्दी</span><span class="sig-tag">தமிழ்</span><span
+              class="sig-tag">తెలుగు</span></div>
+          <div class="scam-tip"><span class="tip-label mono"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                style="vertical-align:-1px;margin-right:3px">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg> DEFENCE</span><span>Scam tactics are the same in every language. Urgency + personal data request =
+              danger.</span></div>
+        </div>
+      </div>
+      <div class="safety-strip">
+        <div class="safety-title mono">// GOLDEN SAFETY RULES</div>
+        <div class="safety-rules">
+          <div class="safety-rule"><span class="rule-num mono">01</span><span class="rule-text">Never share OTP, PIN,
+              password, or CVV with anyone — not even bank employees.</span></div>
+          <div class="safety-rule"><span class="rule-num mono">02</span><span class="rule-text">Call back on official
+              numbers from the bank's website — not from the SMS.</span></div>
+          <div class="safety-rule"><span class="rule-num mono">03</span><span class="rule-text">Urgency is a weapon.
+              Pause, verify, and never act under pressure.</span></div>
+          <div class="safety-rule"><span class="rule-num mono">04</span><span class="rule-text">Check URLs character by
+              character. Fakes use typos like "sbi-secure.in".</span></div>
+          <div class="safety-rule"><span class="rule-num mono">05</span><span class="rule-text">Report fraud to
+              cybercrime.gov.in or call the national helpline 1930.</span></div>
+          <div class="safety-rule"><span class="rule-num mono">06</span><span class="rule-text">If scammed, immediately
+              call your bank and freeze your accounts.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <span class="mono">FRAUDSHIELD v3.0</span>
+      <span class="footer-sep">///</span>
+      <span class="mono">9-ENGINE DETECTION SYSTEM</span>
+      <span class="footer-sep">///</span>
+      <span class="mono">© 2025 — EDUCATIONAL USE ONLY</span>
+    </div>
+  </footer>
+
+  <script>
+    // ── TAB SWITCHER ──
+    function switchTab(tab, btn) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    // ── CHARACTER COUNTER ──
+    const ta = document.getElementById('messageInput');
+    const cc = document.getElementById('charCount');
+    if (ta && cc) {
+      const update = () => cc.textContent = ta.value.length + ' CHARACTERS';
+      ta.addEventListener('input', update);
+      update();
+    }
+
+    // ── SUBMIT LOADING ──
+    const form = document.getElementById('analysisForm');
+    const btn = document.getElementById('submitBtn');
+    if (form && btn) {
+      form.addEventListener('submit', () => {
+        btn.classList.add('scanning');
+        btn.querySelector('.btn-text').textContent = 'SCANNING...';
+      });
+    }
+
+    // ── SCORE BAR ANIMATION ──
+    window.addEventListener('load', () => {
+      document.querySelectorAll('.score-bar-fill, .xai-bar-fill').forEach(bar => {
+        const target = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => { bar.style.width = target; }, 300);
+      });
+      document.querySelectorAll('.signal-chip').forEach((chip, i) => {
+        chip.style.opacity = '0';
+        chip.style.transform = 'translateX(-8px)';
+        setTimeout(() => {
+          chip.style.transition = 'all 0.3s ease';
+          chip.style.opacity = '1';
+          chip.style.transform = 'translateX(0)';
+        }, i * 60 + 400);
+      });
+    });
+
+    // ── OCR DROP ZONE ──
+    function previewImage(input) {
+      const preview = document.getElementById('dropPreview');
+      const drop = document.getElementById('dropZone');
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          preview.innerHTML = `<img src="${e.target.result}" alt="preview">`;
+          drop.classList.add('has-image');
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    const dropZone = document.getElementById('dropZone');
+    if (dropZone) {
+      dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+      dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+      dropZone.addEventListener('drop', e => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+          const dt = new DataTransfer();
+          dt.items.add(file);
+          document.getElementById('screenshotInput').files = dt.files;
+          const reader = new FileReader();
+          reader.onload = ev => {
+            document.getElementById('dropPreview').innerHTML = `<img src="${ev.target.result}" alt="preview">`;
+            dropZone.classList.add('has-image');
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    // ── Feature 1: VOICE INPUT ──
+    let recognition = null;
+    let isRecording = false;
+
+    function toggleVoice() {
+      if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+        document.getElementById('voiceStatus').textContent = 'VOICE NOT SUPPORTED IN THIS BROWSER';
+        return;
+      }
+      if (isRecording) {
+        recognition.stop();
+        return;
+      }
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SR();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-IN';
+
+      recognition.onstart = () => {
+        isRecording = true;
+        document.getElementById('voiceStatus').textContent = 'RECORDING — SPEAK NOW';
+        document.getElementById('voiceBtn').classList.add('recording');
+        document.getElementById('voiceBtnText').textContent = 'STOP RECORDING';
+      };
+
+      recognition.onresult = e => {
+        let transcript = '';
+        for (let i = 0; i < e.results.length; i++) {
+          transcript += e.results[i][0].transcript;
+        }
+        document.getElementById('voiceTranscript').textContent = transcript;
+      };
+
+      recognition.onend = () => {
+        isRecording = false;
+        document.getElementById('voiceStatus').textContent = 'RECORDING COMPLETE';
+        document.getElementById('voiceBtn').classList.remove('recording');
+        document.getElementById('voiceBtnText').textContent = 'RECORD AGAIN';
+      };
+
+      recognition.onerror = () => {
+        isRecording = false;
+        document.getElementById('voiceStatus').textContent = 'MICROPHONE ERROR — CHECK PERMISSIONS';
+        document.getElementById('voiceBtn').classList.remove('recording');
+      };
+
+      recognition.start();
+    }
+
+    function analyzeVoiceText() {
+      const text = document.getElementById('voiceTranscript').textContent.trim();
+      if (!text || text === 'Speak clearly after pressing the button above...') {
+        alert('Please record a message first.');
+        return;
+      }
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/';
+      form.enctype = 'multipart/form-data';
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'message';
+      input.value = text;
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+    }
+  </script>
+  <script src="{{ url_for('static', filename='theme.js') }}"></script>
+</body>
+
+</html>

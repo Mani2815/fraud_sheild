@@ -1,0 +1,7 @@
+Flask
+scikit-learn
+numpy
+gunicorn
+pytesseract
+Pillow
+reportlab

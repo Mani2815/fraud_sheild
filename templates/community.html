@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FraudShield — Community Scam Feed</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500&family=Barlow:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script>
+    (function () {
+      var t = localStorage.getItem('fraudshield-theme');
+      if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    })();
+  </script>
+</head>
+
+<body>
+  <div class="scanline"></div>
+  <div class="noise"></div>
+  <header>
+    <div class="header-left">
+      <div class="logo">
+        <svg class="logo-svg" viewBox="0 0 40 40" fill="none">
+          <polygon points="20,2 38,12 38,28 20,38 2,28 2,12" stroke="#f5a623" stroke-width="1.5" fill="none" />
+          <polygon points="20,8 32,15 32,25 20,32 8,25 8,15" stroke="#f5a623" stroke-width="1"
+            fill="rgba(245,166,35,0.08)" />
+          <circle cx="20" cy="20" r="4" fill="#f5a623" />
+        </svg>
+        <div class="logo-text"><span class="logo-name">FRAUDSHIELD</span><span class="logo-sub">THREAT INTELLIGENCE
+            SYSTEM v3.0</span></div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="status-item"><span class="status-dot pulse"></span><span class="status-label">LIVE</span></div>
+      <nav class="header-nav">
+        <a href="/" class="nav-link mono">ANALYZE</a>
+        <a href="/dashboard" class="nav-link mono">DASHBOARD</a>
+        <a href="/community" class="nav-link mono active">COMMUNITY</a>
+        <a href="/#awareness" class="nav-link mono">AWARENESS</a>
+        <a href="/logs" class="nav-link mono">LOGS</a>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+          <svg class="theme-icon sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+          <svg class="theme-icon moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="ticker-wrap">
+    <div class="ticker-track">
+      <span>COMMUNITY THREAT FEED — CROWDSOURCED INTELLIGENCE</span><span class="sep">///</span>
+      <span>ALL MESSAGES ANONYMIZED BEFORE DISPLAY</span><span class="sep">///</span>
+      <span>PERSONAL DATA AUTOMATICALLY REDACTED</span><span class="sep">///</span>
+      <span>COMMUNITY THREAT FEED — CROWDSOURCED INTELLIGENCE</span><span class="sep">///</span>
+      <span>ALL MESSAGES ANONYMIZED BEFORE DISPLAY</span><span class="sep">///</span>
+      <span>PERSONAL DATA AUTOMATICALLY REDACTED</span><span class="sep">///</span>
+    </div>
+  </div>
+
+  <main>
+    <div class="logs-hero">
+      <div class="hero-label mono">// CROWDSOURCED FRAUD INTELLIGENCE</div>
+      <h1 class="hero-title" style="font-size:clamp(2.5rem,6vw,5rem);">COMMUNITY <span class="outline-text">SCAM
+          FEED</span></h1>
+      <p style="color:var(--text-dim);font-size:0.95rem;margin-top:12px;max-width:600px;line-height:1.7">
+        Anonymized HIGH and MEDIUM risk messages shared as public threat intelligence. Phone numbers, links, and IDs are
+        automatically redacted. Help the community stay safe.
+      </p>
+    </div>
+
+    <div class="stat-cards" style="grid-template-columns:repeat(3,1fr);margin-bottom:32px">
+      <div class="stat-card">
+        <div class="stat-card-num">{{ feed|length }}</div>
+        <div class="stat-card-label mono">THREATS IN FEED</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num" style="color:var(--high)">{{ stats.high }}</div>
+        <div class="stat-card-label mono">HIGH RISK TOTAL</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num" style="color:var(--amber)">{{ stats.avg_score }}</div>
+        <div class="stat-card-label mono">AVG THREAT SCORE</div>
+      </div>
+    </div>
+
+    <!-- TOP FLAGS SIDEBAR + FEED LAYOUT -->
+    <div class="community-layout">
+      <!-- FEED -->
+      <div class="feed-column">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-id mono">[ FEED ]</span>
+            <span class="panel-title">ACTIVE THREAT REPORTS</span>
+            <span class="panel-status mono accent">ANONYMIZED</span>
+          </div>
+          {% if feed %}
+          <div class="feed-list">
+            {% for item in feed %}
+            <div class="feed-item feed-{{ item.risk_level }}">
+              <div class="feed-item-header">
+                <span class="risk-pill {{ item.risk_level }}">{{ item.risk_level }}</span>
+                <span class="feed-score mono"
+                  style="color:{% if item.risk_level=='HIGH' %}var(--high){% else %}var(--medium){% endif %}">{{
+                  item.score }}/100</span>
+                <span class="feed-id mono muted">#{{ item.id }}</span>
+                <span class="feed-time mono muted">{{ item.time }}</span>
+              </div>
+              <div class="feed-message">{{ item.message }}</div>
+              {% if item.flags %}
+              <div class="feed-flags">
+                {% for flag in item.flags.split(', ')[:4] %}
+                <span class="mini-flag">{{ flag }}</span>
+                {% endfor %}
+                {% if item.flag_count > 4 %}<span class="mini-flag more">+{{ item.flag_count - 4 }} more</span>{% endif
+                %}
+              </div>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="empty-logs">
+            <div class="empty-icon mono">[ NO THREATS YET ]</div>
+            <p>Analyze some messages first. <a href="/" class="amber-link">Run a scan →</a></p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="sidebar-column">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-id mono">[ TOP SIGNALS ]</span>
+            <span class="panel-title">TRENDING FLAGS</span>
+          </div>
+          <div style="padding:16px 20px">
+            {% if top_flags %}
+            {% for flag, count in top_flags %}
+            <div class="flag-bar-row" style="margin-bottom:10px">
+              <span class="flag-bar-label mono" style="width:110px;font-size:0.68rem">{{ flag }}</span>
+              <div class="flag-bar-track" style="flex:1">
+                <div class="flag-bar-fill" style="width:{{ ((count / top_flags[0][1]) * 100)|int }}%"></div>
+              </div>
+              <span class="flag-bar-count mono accent" style="margin-left:8px">{{ count }}</span>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p style="color:var(--text-muted);font-size:0.82rem">No data yet.</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:20px">
+          <div class="panel-header"><span class="panel-title">PRIVACY NOTICE</span></div>
+          <div style="padding:16px 20px;font-size:0.82rem;color:var(--text-dim);line-height:1.65">
+            <p>All shared messages are automatically anonymized:</p>
+            <ul style="margin-top:10px;padding-left:16px;color:var(--text-muted)">
+              <li style="margin-bottom:6px">Phone numbers → [PHONE REDACTED]</li>
+              <li style="margin-bottom:6px">Email addresses → [EMAIL REDACTED]</li>
+              <li style="margin-bottom:6px">URLs → [LINK: domain.com]</li>
+              <li style="margin-bottom:6px">Aadhaar numbers → [AADHAAR REDACTED]</li>
+              <li>Account numbers → [ACCOUNT REDACTED]</li>
+            </ul>
+            <p style="margin-top:12px;color:var(--text-muted);font-size:0.78rem">Only HIGH and MEDIUM risk messages
+              appear in this feed.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-row" style="margin-top:28px">
+      <a href="/" class="reset-btn mono">↩ ANALYZE A MESSAGE</a>
+      <a href="/dashboard" class="reset-btn mono">→ LIVE DASHBOARD</a>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-inner"><span class="mono">FRAUDSHIELD v3.0</span><span class="footer-sep">///</span><span
+        class="mono">COMMUNITY THREAT INTELLIGENCE</span><span class="footer-sep">///</span><span class="mono">©
+        2025</span></div>
+  </footer>
+  <script src="{{ url_for('static', filename='theme.js') }}"></script>
+</body>
+
+</html>
