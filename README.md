@@ -6,7 +6,7 @@ Features a custom **forensic terminal aesthetic** UI with advanced typography, a
 
 ---
 
-## 🚀 Key Features (v3.0)
+## 🚀 Key Features
 
 | Feature | Details |
 |---------|---------|
